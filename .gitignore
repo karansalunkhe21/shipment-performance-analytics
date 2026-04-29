@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# Data files (too large for GitHub)
+data/raw/*.csv
+data/raw/*.xlsx
+data/processed/
+
+# Database files
+*.db
+*.sqlite
+
+# Logs and outputs
+outputs/
+*.log
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
