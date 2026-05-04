@@ -62,3 +62,18 @@ SELECT
 FROM shipments
 GROUP BY discount_band
 ORDER BY avg_profit DESC;
+
+
+-- KPI 6: Performance by Customer Segment
+SELECT
+    customer_segment,
+    COUNT(*)                                AS total_orders,
+    ROUND(SUM(sales), 2)                   AS total_revenue,
+    ROUND(AVG(sales), 2)                   AS avg_order_value,
+    ROUND(SUM(order_profit_per_order), 2)  AS total_profit,
+    SUM(is_late)                           AS late_orders,
+    ROUND(100.0 * SUM(CASE WHEN is_late = 0 THEN 1 ELSE 0 END) / COUNT(*), 2)
+                                           AS otd_pct
+FROM shipments
+GROUP BY customer_segment
+ORDER BY total_revenue DESC;
