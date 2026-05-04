@@ -77,3 +77,15 @@ SELECT
 FROM shipments
 GROUP BY customer_segment
 ORDER BY total_revenue DESC;
+
+
+-- KPI 7: Monthly Revenue Trend
+SELECT
+    strftime('%Y', order_date_dateorders)        AS year,
+    strftime('%m', order_date_dateorders)        AS month,
+    COUNT(*)                                     AS total_orders,
+    ROUND(SUM(sales), 2)                         AS total_revenue,
+    ROUND(SUM(order_profit_per_order), 2)        AS total_profit
+FROM shipments
+GROUP BY year, month
+ORDER BY year, month;
