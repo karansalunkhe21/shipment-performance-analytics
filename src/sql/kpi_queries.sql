@@ -34,3 +34,15 @@ SELECT
 FROM shipments
 GROUP BY order_region
 ORDER BY otd_pct ASC;
+
+
+-- KPI 4: Revenue and Profit by Category
+SELECT
+    category_name,
+    COUNT(*)                                AS total_orders,
+    ROUND(SUM(sales), 2)                   AS total_revenue,
+    ROUND(SUM(order_profit_per_order), 2)  AS total_profit,
+    ROUND(100.0 * SUM(order_profit_per_order) / SUM(sales), 2) AS profit_margin_pct
+FROM shipments
+GROUP BY category_name
+ORDER BY total_revenue DESC;
