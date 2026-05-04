@@ -46,3 +46,19 @@ SELECT
 FROM shipments
 GROUP BY category_name
 ORDER BY total_revenue DESC;
+
+-- KPI 5: Impact of Discount on Profit Margin
+SELECT
+    CASE
+        WHEN order_item_discount_rate = 0        THEN 'No Discount'
+        WHEN order_item_discount_rate <= 0.05    THEN '0-5%'
+        WHEN order_item_discount_rate <= 0.10    THEN '5-10%'
+        WHEN order_item_discount_rate <= 0.20    THEN '10-20%'
+        ELSE 'Above 20%'
+    END                                            AS discount_band,
+    COUNT(*)                                       AS total_orders,
+    ROUND(AVG(order_profit_per_order), 2)          AS avg_profit,
+    ROUND(AVG(sales), 2)                           AS avg_sales
+FROM shipments
+GROUP BY discount_band
+ORDER BY avg_profit DESC;
