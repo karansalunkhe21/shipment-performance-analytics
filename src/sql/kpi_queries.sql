@@ -89,3 +89,40 @@ SELECT
 FROM shipments
 GROUP BY year, month
 ORDER BY year, month;
+
+-- KPI 8: Top 10 Most Delayed Products
+SELECT
+    product_name,
+    COUNT(*)                                    AS total_orders,
+    ROUND(AVG(shipping_delay_days), 2)          AS avg_delay_days,
+    SUM(is_late)                                AS late_orders,
+    ROUND(100.0 * SUM(is_late) / COUNT(*), 2)  AS late_rate_pct
+FROM shipments
+GROUP BY product_name
+ORDER BY avg_delay_days DESC
+LIMIT 10;
+
+
+
+-- KPI 9: Profit by Department
+SELECT
+    department_name,
+    COUNT(*)                                AS total_orders,
+    ROUND(SUM(sales), 2)                   AS total_revenue,
+    ROUND(SUM(order_profit_per_order), 2)  AS total_profit,
+    ROUND(100.0 * SUM(order_profit_per_order) / SUM(sales), 2) AS profit_margin_pct
+FROM shipments
+GROUP BY department_name
+ORDER BY total_profit DESC;
+
+
+-- KPI 10: Late Delivery Trend by Month
+SELECT
+    strftime('%Y', order_date_dateorders)         AS year,
+    strftime('%m', order_date_dateorders)         AS month,
+    COUNT(*)                                      AS total_orders,
+    SUM(is_late)                                  AS late_orders,
+    ROUND(100.0 * SUM(is_late) / COUNT(*), 2)    AS late_rate_pct
+FROM shipments
+GROUP BY year, month
+ORDER BY year, month;
