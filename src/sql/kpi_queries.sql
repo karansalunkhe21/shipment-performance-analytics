@@ -139,3 +139,15 @@ FROM shipments
 WHERE order_status = 'SUSPECTED_FRAUD'
 GROUP BY market, shipping_mode
 ORDER BY total_orders DESC;
+
+-- Top 10 Countries by Revenue
+SELECT
+    order_country,
+    COUNT(*)                                AS total_orders,
+    ROUND(SUM(sales), 2)                   AS total_revenue,
+    ROUND(SUM(order_profit_per_order), 2)  AS total_profit,
+    ROUND(100.0 * SUM(order_profit_per_order) / SUM(sales), 2) AS profit_margin_pct
+FROM shipments
+GROUP BY order_country
+ORDER BY total_revenue DESC
+LIMIT 10;
