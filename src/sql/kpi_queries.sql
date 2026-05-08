@@ -126,3 +126,16 @@ SELECT
 FROM shipments
 GROUP BY year, month
 ORDER BY year, month;
+
+
+-- Suspected Fraud Analysis
+SELECT
+    market,
+    shipping_mode,
+    COUNT(*)                                    AS total_orders,
+    ROUND(AVG(sales), 2)                        AS avg_order_value,
+    ROUND(AVG(order_item_discount_rate), 2)     AS avg_discount_rate
+FROM shipments
+WHERE order_status = 'SUSPECTED_FRAUD'
+GROUP BY market, shipping_mode
+ORDER BY total_orders DESC;
