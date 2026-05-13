@@ -202,3 +202,55 @@ SELECT
 FROM customer_value
 ORDER BY revenue_rank
 LIMIT 20;
+
+
+---  Product Performance with Revenue Rank and Cumulative Revenue
+WITH product_stats AS (
+    SELECT
+        product_name,
+        COUNT(*)                                        AS total_orders,
+        ROUND(SUM(sales), 2)                           AS total_revenue,
+        ROUND(SUM(order_profit_per_order), 2)          AS total_profit,
+        ROUND(100.0 * SUM(is_late) / COUNT(*), 2)      AS late_rate_pct
+    FROM shipments
+    GROUP BY product_name
+)
+SELECT
+    product_name,
+    total_orders,
+    total_revenue,
+    total_profit,
+    late_rate_pct,
+    RANK() OVER (ORDER BY total_revenue DESC)          AS revenue_rank,
+    ROUND(SUM(total_revenue) OVER (
+        ORDER BY total_revenue DESC
+    ), 2)                                              AS cumulative_revenue
+FROM product_stats
+LIMIT 15;
+
+
+--- Top 3 Markets per Year by Revenue using PARTITION BY
+
+WITH yearly_market AS (
+    SELECT
+        strftime('%Y', order_date_dateorders)   AS year,
+        market,
+        ROUND(SUM(sales), 2)                   AS total_revenue
+    FROM shipments
+    GROUP BY year, market
+),
+ranked AS (
+    SELECT
+        year,
+        market,
+        total_revenue,
+        RANK() OVER (
+            PARTITION BY year
+            ORDER BY total_revenue DESC
+        )                                       AS market_rank
+    FROM yearly_market
+)
+SELECT *
+FROM ranked
+WHERE market_rank <= 3
+ORDER BY year, market_rank;
